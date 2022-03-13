@@ -1,7 +1,7 @@
 {
   "modid": "basemod",
-  "name": "${artifactId}",
-  "author_list": ["kiooeht", "test447"],
+  "name": "${artifactId} - Fork",
+  "author_list": ["kiooeht", "test447", "LANGERGabrielle"],
   "description": "Unofficial modding API for Slay the Spire. Also a Dev Console.",
   "credits": "t-larson: Original creator of BaseMod.\nContributors: test447, Haashi, kiooeht, Blank The Evil, robojumper, FlipskiZ, DemoXin, Skrelpoid, kobting, twanvl, Moocowsgomoo, JohnnyDevo, MichaelMayhem, admiralbolt, Celicath, Reina, fiiiiilth, Rin Camelia, JohnnyBazooka89, Alchyr, Seeonee, bugsniper, alexdriedger, Raz, erasels, LordAddy, NotInTheFace, Vex, codewarrior0, EricB, Mistress Alison, herbix, modargo",
   "version": "${project.version}",
