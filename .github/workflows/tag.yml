@@ -1,0 +1,29 @@
+name: Tagging
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch: ~
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Get Versions
+        id: versions
+        run: |
+          echo ::set-output name=oldest::$(git describe --tags --abbrev=0)
+          echo ::set-output name=new::$(tac CHANGELOG.md | grep -E '####.+\#\#\#\#' | grep -oE -m 1 'v[0-9]+\.[0-9]+\.[0-9]+')
+        shell: bash
+
+      - name: Create New Tag
+        run: |
+          git tag ${{ steps.versions.outputs.new }}
+          git push origin ${{ steps.versions.outputs.new }}
+        shell: bash
+        if: steps.versions.outputs.new != steps.versions.outputs.oldest
