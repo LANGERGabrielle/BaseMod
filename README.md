@@ -1,6 +1,8 @@
 This fork reverts 4b93fdb44bcacf0eccf0d6bf7b4ba84d1dbccd3b which gives the player an orb slot when channeling an orb with no slot.
 You might want to use this mod if you want the game to play exactly like the base game.
 
+To use, replace your BaseMode.jar with one from https://github.com/LANGERGabrielle/BaseMod/releases
+
 # BaseMod #
 BaseMod provides a number of hooks and a console.
 
