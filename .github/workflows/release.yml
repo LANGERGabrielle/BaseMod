@@ -1,0 +1,40 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*.*.*"]
+  workflow_dispatch: ~
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-java@v2
+        with:
+          distribution: temurin
+          java-version: 8
+          cache: maven
+
+      - name: Build
+        run: |
+          mkdir ../lib
+          cd ../lib
+          curl -s https://slay-the-spire.s3.amazonaws.com/desktop-1.0.jar.gpg | gpg --quiet --batch --yes --decrypt --passphrase="${{ secrets.ENCRYPTION_KEY }}" --output desktop-1.0.jar
+          
+          cd ..
+          git clone --depth=1 https://github.com/kiooeht/ModTheSpire
+          cd ModTheSpire
+          chmod +x mvnw
+          ./mvnw package
+          
+          cd ../BaseMod
+          mvn package
+        shell: bash
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: mod/target/BaseMod.jar
