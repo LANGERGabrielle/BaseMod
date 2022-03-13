@@ -851,5 +851,4 @@ This is a fast forward to v1.6.3 of daviscook477's fork with a few additional ch
 * Add !Turn! to dynamic text (Mistress Alison)
 * Add modifyName to CardMods (Mistress Alison)
 * Fix card tintColor (herbix)
-
-#### dev ####
+* Reverted "Automatically give player an orb slot when channeling on a character without orb slots"
