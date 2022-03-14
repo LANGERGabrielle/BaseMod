@@ -9,10 +9,19 @@ jobs:
   run:
     runs-on: ubuntu-latest
 
+    permissions:
+      id-token: write
+      contents: read
+
     steps:
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::219381348292:role/AmazonS3StSGetObject
+          aws-region: us-east-1
 
       - uses: actions/setup-java@v2
         with:
@@ -24,7 +33,7 @@ jobs:
         run: |
           mkdir ../lib
           cd ../lib
-          curl -s https://slay-the-spire.s3.amazonaws.com/desktop-1.0.jar.gpg | gpg --quiet --batch --yes --decrypt --passphrase="${{ secrets.ENCRYPTION_KEY }}" --output desktop-1.0.jar
+          aws s3api get-object --bucket slay-the-spire --key desktop-1.0.jar desktop-1.0.jar
           
           cd ..
           git clone --depth=1 https://github.com/kiooeht/ModTheSpire
