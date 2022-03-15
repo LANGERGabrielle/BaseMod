@@ -56,3 +56,4 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: BaseMod/mod/target/BaseMod.jar
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}

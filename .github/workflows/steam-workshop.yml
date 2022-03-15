@@ -2,7 +2,7 @@ name: Steam Workshop Upload
 
 on:
   release:
-    types: [released]
+    types: [published]
   workflow_dispatch: ~
 
 jobs:
