@@ -1,10 +1,21 @@
-This fork reverts 4b93fdb44bcacf0eccf0d6bf7b4ba84d1dbccd3b which gives the player an orb slot when channeling an orb with no slot.
-You might want to use this mod if you want the game to play exactly like the base game.
+This fork reverts an addition to BaseMod that gives the player an orb slot when channeling an orb while not having a slot.
 
-To use, replace your BaseMode.jar with one from https://github.com/LANGERGabrielle/BaseMod/releases
+You might want to use this fork if you want the game to play exactly like the base game.
 
 # BaseMod #
-BaseMod provides a number of hooks and a console.
+BaseMod provides a number of hooks and a console. This mod is usually required for other mods to run.
+
+## Installation ##
+
+You don't need to uninstall BaseMod, simply choose the fork instead when starting Slay the Spire with mods.
+
+### Steam Workshop ###
+
+Subscribe to [the item](https://steamcommunity.com/workshop/filedetails/?id=2778664982).
+
+### Manually ###
+
+Grab [the most recent BaseMod.jar](https://github.com/LANGERGabrielle/BaseMod/releases) and install it like any other mod.
 
 ![Developer Console](github_resources/console.png)
 
