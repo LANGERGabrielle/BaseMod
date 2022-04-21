@@ -1,21 +1,8 @@
-This fork reverts an addition to BaseMod that gives the player an orb slot when channeling an orb while not having a slot.
-
-You might want to use this fork if you want the game to play exactly like the base game.
+:no_entry_sign: This fork is deprecated as BaseMod now has the option "Enable base game fixes" (enabled by default) that you can disable in the option menu.
+This option when disabled will disable giving an orb slot when channeling an orb with no slot (which usually happens with Foreign Influence).
 
 # BaseMod #
 BaseMod provides a number of hooks and a console. This mod is usually required for other mods to run.
-
-## Installation ##
-
-You don't need to uninstall BaseMod, simply choose the fork instead when starting Slay the Spire with mods.
-
-### Steam Workshop ###
-
-Subscribe to [the item](https://steamcommunity.com/workshop/filedetails/?id=2778664982).
-
-### Manually ###
-
-Grab [the most recent BaseMod.jar](https://github.com/LANGERGabrielle/BaseMod/releases) and install it like any other mod.
 
 ![Developer Console](github_resources/console.png)
 
