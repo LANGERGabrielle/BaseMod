@@ -1,5 +1,6 @@
 package basemod.patches.com.megacrit.cardcrawl.rooms.AbstractRoom;
 
+import basemod.BaseMod;
 import com.evacipated.cardcrawl.modthespire.lib.SpireInstrumentPatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.megacrit.cardcrawl.rooms.AbstractRoom;
@@ -17,7 +18,13 @@ public class FixUnnecessaryRewardCulling {
             @Override
             public void edit(MethodCall m) throws CannotCompileException {
                 if (m.getClassName().equals(ArrayList.class.getName()) && m.getMethodName().equals("size")) {
-                    m.replace("$_ = -1;");
+                    m.replace(
+                            "if (" + BaseMod.class.getName() + ".fixesEnabled) {" +
+                                    "$_ = -1;" +
+                                    "} else {" +
+                                    "$_ = $proceed($$);" +
+                                    "}"
+                    );
                 }
             }
         };

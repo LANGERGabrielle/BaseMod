@@ -858,4 +858,11 @@ This is a fast forward to v1.6.3 of daviscook477's fork with a few additional ch
 * Add CardModifier support to WhatMod (kiooeht)
 * Fix crash in ZHT with modded keywords (modargo)
 
+#### v5.40.0 ####
+* Add option to disable BaseMod gameplay fixes, allowing a more vanilla experience (kiooeht)
+  * Automatically give orb slot
+  * Allow more than 5 combat rewards
+* Add tooltip option to ModLabeledToggleButton (kiooeht)
+* Remove Note For Yourself patch that is no longer necessary (kiooeht)
+
 #### dev ####

@@ -253,6 +253,8 @@ public class BaseMod {
 	private static Texture animationTexture;
 	private static TextureRegion animationTextureRegion;
 
+	public static boolean fixesEnabled = true;
+
 	public static final String CONFIG_FILE = "basemod-config";
 	private static SpireConfig config;
 
@@ -276,6 +278,7 @@ public class BaseMod {
 		defaultProperties.setProperty("console-key", "`");
 		defaultProperties.setProperty("autocomplete-enabled", Boolean.toString(true));
 		defaultProperties.setProperty("whatmod-enabled", Boolean.toString(true));
+		defaultProperties.setProperty("basemod-fixes", Boolean.toString(true));
 
 		try {
 			SpireConfig retConfig = new SpireConfig(BaseModInit.MODNAME, CONFIG_FILE, defaultProperties);
@@ -335,6 +338,8 @@ public class BaseMod {
 		if (whatmodEnabled != null) {
 			WhatMod.enabled = whatmodEnabled;
 		}
+
+		fixesEnabled = getBoolean("basemod-fixes");
 	}
 
 	public static boolean isBaseGameCharacter(AbstractPlayer c) {

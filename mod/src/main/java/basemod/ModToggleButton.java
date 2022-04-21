@@ -19,7 +19,7 @@ public class ModToggleButton implements IUIElement {
 	private static final float HB_WIDTH_EXTENDED = 200.0f;
 	
 	private Consumer<ModToggleButton> toggle;
-	private Hitbox hb;
+	Hitbox hb;
 	private float x;
 	private float y;
 	private float w;

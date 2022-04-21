@@ -1,11 +1,12 @@
 package basemod;
 
+import basemod.patches.com.megacrit.cardcrawl.helpers.TipHelper.HeaderlessTip;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.megacrit.cardcrawl.core.Settings;
+import com.megacrit.cardcrawl.helpers.input.InputHelper;
 
-import java.util.Arrays;
 import java.util.function.Consumer;
 
 public class ModLabeledToggleButton implements IUIElement {
@@ -14,13 +15,21 @@ public class ModLabeledToggleButton implements IUIElement {
 	
 	public ModToggleButton toggle;
 	public ModLabel text;
+	public String tooltip;
 	
 	public ModLabeledToggleButton(String labelText, float xPos, float yPos,
 			Color color, BitmapFont font, boolean enabled, ModPanel p,
 			Consumer<ModLabel> labelUpdate, Consumer<ModToggleButton> c) {
+		this(labelText, null, xPos, yPos, color, font, enabled, p, labelUpdate, c);
+	}
+
+	public ModLabeledToggleButton(String labelText, String tooltipText, float xPos, float yPos,
+		Color color, BitmapFont font, boolean enabled, ModPanel p,
+				Consumer<ModLabel> labelUpdate, Consumer<ModToggleButton> c) {
 		toggle = new ModToggleButton(xPos, yPos, enabled, false, p, c);
 		text = new ModLabel(labelText, xPos + TEXT_X_OFFSET, yPos + TEXT_Y_OFFSET,
 				color, font, p, labelUpdate);
+		tooltip = tooltipText;
 		
 		// TODO: implement multi-line text
 		toggle.wrapHitboxToText(labelText, 1000.0f, 0.0f, font);
@@ -31,6 +40,14 @@ public class ModLabeledToggleButton implements IUIElement {
 	public void render(SpriteBatch sb) {
 		toggle.render(sb);
 		text.render(sb);
+
+		if (tooltip != null && toggle.hb.hovered) {
+			HeaderlessTip.renderHeaderlessTip(
+					InputHelper.mX + 60f * Settings.scale,
+					InputHelper.mY - 50f * Settings.scale,
+					tooltip
+			);
+		}
 	}
 
 	@Override
