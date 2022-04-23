@@ -93,7 +93,7 @@ public class BaseModInit implements PostInitializeSubscriber {
 
 		ModLabeledToggleButton enableWhatMod = new ModLabeledToggleButton(
 				"Enable mod name in tooltips",
-				FontHelper.colorString("Must restart game to take effect", "r"),
+				FontHelper.colorString("Must restart game to take effect.", "r"),
 				WHATMOD_BUTTON_X, WHATMOD_BUTTON_Y, Settings.CREAM_COLOR, FontHelper.charDescFont,
 				WhatMod.enabled, settingsPanel, (label) -> {},
 				(button) -> {
