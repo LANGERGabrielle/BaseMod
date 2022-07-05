@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.evacipated.cardcrawl.modthespire.lib.*;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.core.Settings;
+import com.megacrit.cardcrawl.helpers.ScreenShake;
 import javassist.CtBehavior;
 
 import java.util.ArrayList;
@@ -24,6 +25,8 @@ import java.util.List;
 )
 public class ApplyScreenPostProcessor {
     public static final List<ScreenPostProcessor> postProcessors = new ArrayList<>();
+
+    private static boolean failedInitialized = false;
 
     private static int defaultFramebufferHandle;
 
@@ -38,8 +41,14 @@ public class ApplyScreenPostProcessor {
 
     @SpireInsertPatch(locator = BeginLocator.class)
     public static void BeforeSpriteBatchBegin(SpriteBatch ___sb) {
+        if (failedInitialized) {
+            return;
+        }
         if (primaryFrameBuffer == null) {
             initFrameBuffer();
+            if (failedInitialized) {
+                return;
+            }
         }
 
         setDefaultFrameBuffer(primaryFrameBuffer);
@@ -58,6 +67,10 @@ public class ApplyScreenPostProcessor {
     }
 
     public static void BeforeSpriteBatchEnd(SpriteBatch sb, OrthographicCamera camera) {
+        if (failedInitialized) {
+            return;
+        }
+        
         sb.end();
         primaryFrameBuffer.end();
 
@@ -81,6 +94,15 @@ public class ApplyScreenPostProcessor {
 
         sb.setShader(null);
         Gdx.gl20.glBindFramebuffer(GL20.GL_FRAMEBUFFER, defaultFramebufferHandle);
+
+        // Fix screen shake
+        if (Settings.SCREEN_SHAKE &&
+                ReflectionHacks.<Float>getPrivate(CardCrawlGame.screenShake, ScreenShake.class, "duration") > 0 &&
+                CardCrawlGame.viewport.getScreenWidth() > 0 &&
+                CardCrawlGame.viewport.getScreenHeight() > 0) {
+            CardCrawlGame.viewport.apply();
+        }
+
         sb.begin();
         sb.setColor(Color.WHITE);
         sb.setBlendFunction(GL20.GL_ONE, GL20.GL_ZERO);
@@ -106,18 +128,34 @@ public class ApplyScreenPostProcessor {
     }
 
     private static void initFrameBuffer() {
-        defaultFramebufferHandle = ReflectionHacks.<Integer>getPrivateStatic(GLFrameBuffer.class, "defaultFramebufferHandle");
+        try {
+            defaultFramebufferHandle = ReflectionHacks.<Integer>getPrivateStatic(GLFrameBuffer.class, "defaultFramebufferHandle");
 
-        int width = Gdx.graphics.getWidth();
-        int height = Gdx.graphics.getHeight();
+            int width = Gdx.graphics.getWidth();
+            int height = Gdx.graphics.getHeight();
 
-        primaryFrameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, width, height, true, true);
-        primaryFboRegion = new TextureRegion(primaryFrameBuffer.getColorBufferTexture());
-        primaryFboRegion.flip(false, true);
+            primaryFrameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, width, height, true, true);
+            primaryFboRegion = new TextureRegion(primaryFrameBuffer.getColorBufferTexture());
+            primaryFboRegion.flip(false, true);
 
-        secondaryFrameBuffer = new FrameBuffer(Pixmap.Format.RGB888, width, height, true, true);
-        secondaryFboRegion = new TextureRegion(secondaryFrameBuffer.getColorBufferTexture());
-        secondaryFboRegion.flip(false, true);
+            secondaryFrameBuffer = new FrameBuffer(Pixmap.Format.RGB888, width, height, true, true);
+            secondaryFboRegion = new TextureRegion(secondaryFrameBuffer.getColorBufferTexture());
+            secondaryFboRegion.flip(false, true);
+        } catch (Exception e) {
+            failedInitialized = true;
+            e.printStackTrace();
+
+            if (primaryFrameBuffer != null) {
+                primaryFrameBuffer.dispose();
+                primaryFrameBuffer = null;
+                primaryFboRegion = null;
+            }
+            if (secondaryFrameBuffer != null) {
+                secondaryFrameBuffer.dispose();
+                secondaryFrameBuffer = null;
+                secondaryFboRegion = null;
+            }
+        }
     }
 
     private static void setDefaultFrameBuffer(FrameBuffer fbo) {

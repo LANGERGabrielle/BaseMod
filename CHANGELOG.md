@@ -896,4 +896,8 @@ This is a fast forward to v1.6.3 of daviscook477's fork with a few additional ch
 * Add option for custom events that end with a reward screen (herbix)
 * Add screen-space rendering postprocess (herbix/kiooeht)
 
+#### v5.42.1 ####
+* Fix screen shake (herbix)
+* Add safety checks to post-processing initialization (kiooeht)
+
 #### dev ####
