@@ -108,7 +108,7 @@ public class ApplyScreenPostProcessor {
         sb.setBlendFunction(GL20.GL_ONE, GL20.GL_ZERO);
 
         sb.setProjectionMatrix(camera.combined);
-        sb.draw(primaryFboRegion, 0, 0, Settings.WIDTH, Settings.HEIGHT);
+        sb.draw(primaryFboRegion, -Settings.VERT_LETTERBOX_AMT, -Settings.HORIZ_LETTERBOX_AMT);
         sb.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
         // I don't know why, but this solves some problems
