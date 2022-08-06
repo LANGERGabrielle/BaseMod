@@ -9,6 +9,8 @@ import javassist.CannotCompileException;
 import javassist.expr.ExprEditor;
 import javassist.expr.MethodCall;
 
+import java.util.ArrayList;
+
 // CustomReward calls the default (parameterless) constructor of RewardItem, which is perfectly reasonable except for
 // thing: that constructor is normally used for generating card rewards, and it calls AbstractDungeon.getRewardCards().
 // This has negative effects: it advances the rare card chance and it makes outcomes change on save/load. It's also
@@ -24,7 +26,7 @@ public class AvoidCardGenerationForCustomRewardsPatch {
         @Override
         public void edit(MethodCall methodCall) throws CannotCompileException {
             if (methodCall.getClassName().equals(AbstractDungeon.class.getName()) && methodCall.getMethodName().equals("getRewardCards")) {
-                methodCall.replace(String.format("{ $_ = this instanceof %1$s ? null : $proceed($$); }", CustomReward.class.getName()));
+                methodCall.replace(String.format("{ $_ = this instanceof %1$s ? new %2$s() : $proceed($$); }", CustomReward.class.getName(), ArrayList.class.getName()));
             }
         }
     }

@@ -920,4 +920,7 @@ This is a fast forward to v1.6.3 of daviscook477's fork with a few additional ch
   * Add extra Location cases for compendium and cards not owned by the player
 * Add modifyTitle support to TinyCards (Mistress Alison)
 
+#### v5.44.1 ####
+* Fix possible crash in other mods when using CustomReward (kiooeht)
+
 #### dev ####
