@@ -1,12 +1,10 @@
 package basemod.patches.com.megacrit.cardcrawl.vfx;
 
 import basemod.Pair;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Pool;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch2;
 import com.megacrit.cardcrawl.cards.AbstractCard;
-import com.megacrit.cardcrawl.cards.tempCards.Shiv;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
 import com.megacrit.cardcrawl.scenes.TheBottomScene;
 import com.megacrit.cardcrawl.scenes.TheCityScene;
@@ -21,9 +19,12 @@ import com.megacrit.cardcrawl.vfx.combat.StunStarEffect;
 import com.megacrit.cardcrawl.vfx.combat.UnknownParticleEffect;
 import com.megacrit.cardcrawl.vfx.scene.*;
 import javassist.*;
+import javassist.bytecode.*;
 import javassist.expr.ExprEditor;
 import javassist.expr.NewExpr;
+import sun.misc.Unsafe;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -83,197 +84,41 @@ public class FixMemoryChurn
 			new Pair(TheEndingScene.class, "updateParticles"),
 	};
 
+	private static class UnsafePool<T> extends Pool<T>
+	{
+		private static final Unsafe theUnsafe;
+
+		static {
+			try {
+				Field f = Unsafe.class.getDeclaredField("theUnsafe");
+				f.setAccessible(true);
+				theUnsafe = (Unsafe) f.get(null);
+			} catch (NoSuchFieldException | IllegalAccessException e) {
+				throw new RuntimeException("Failed to get Unsafe", e);
+			}
+		}
+
+		private final Class<T> type;
+
+		UnsafePool(Class<T> type)
+		{
+			this.type = type;
+		}
+
+		@Override
+		protected T newObject()
+		{
+			try {
+				return (T) theUnsafe.allocateInstance(type);
+			} catch (InstantiationException e) {
+				throw new RuntimeException(e);
+			}
+		}
+	}
+
 	// poolMap gets populated by a patch
 	@SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
 	private static final Map<Class<?>, Pool<? extends AbstractGameEffect>> poolMap = new HashMap<>();
-
-	private static final Pool<DiscardGlowEffect> pool_DiscardGlowEffect = new Pool<DiscardGlowEffect>()
-	{
-		@Override
-		protected DiscardGlowEffect newObject()
-		{
-			return new DiscardGlowEffect(true);
-		}
-	};
-	private static final Pool<GameDeckGlowEffect> pool_GameDeckGlowEffect = new Pool<GameDeckGlowEffect>()
-	{
-		@Override
-		protected GameDeckGlowEffect newObject()
-		{
-			return new GameDeckGlowEffect(false);
-		}
-	};
-	private static final Pool<CardGlowBorder> pool_CardGlowBorder = new Pool<CardGlowBorder>()
-	{
-		@Override
-		protected CardGlowBorder newObject()
-		{
-			// placeholder shiv, I guess
-			return new CardGlowBorder(new Shiv());
-		}
-	};
-	private static final Pool<DebuffParticleEffect> pool_DebuffParticleEffect = new Pool<DebuffParticleEffect>()
-	{
-		@Override
-		protected DebuffParticleEffect newObject()
-		{
-			return new DebuffParticleEffect(0, 0);
-		}
-	};
-	private static final Pool<BuffParticleEffect> pool_BuffParticleEffect = new Pool<BuffParticleEffect>()
-	{
-		@Override
-		protected BuffParticleEffect newObject()
-		{
-			return new BuffParticleEffect(0, 0);
-		}
-	};
-	private static final Pool<ShieldParticleEffect> pool_ShieldParticleEffect = new Pool<ShieldParticleEffect>()
-	{
-		@Override
-		protected ShieldParticleEffect newObject()
-		{
-			return new ShieldParticleEffect(0, 0);
-		}
-	};
-	private static final Pool<UnknownParticleEffect> pool_UnknownParticleEffect = new Pool<UnknownParticleEffect>()
-	{
-		@Override
-		protected UnknownParticleEffect newObject()
-		{
-			// placeholder shiv, I guess
-			return new UnknownParticleEffect(0, 0);
-		}
-	};
-	private static final Pool<StunStarEffect> pool_StunStarEffect = new Pool<StunStarEffect>()
-	{
-		@Override
-		protected StunStarEffect newObject()
-		{
-			// placeholder shiv, I guess
-			return new StunStarEffect(0, 0);
-		}
-	};
-	private static final Pool<TorchParticleLEffect> pool_TorchParticleLEffect = new Pool<TorchParticleLEffect>()
-	{
-		@Override
-		protected TorchParticleLEffect newObject()
-		{
-			return new TorchParticleLEffect(0, 0);
-		}
-	};
-	private static final Pool<LightFlareLEffect> pool_LightFlareLEffect = new Pool<LightFlareLEffect>()
-	{
-		@Override
-		protected LightFlareLEffect newObject()
-		{
-			return new LightFlareLEffect(0, 0);
-		}
-	};
-	private static final Pool<TorchParticleMEffect> pool_TorchParticleMEffect = new Pool<TorchParticleMEffect>()
-	{
-		@Override
-		protected TorchParticleMEffect newObject()
-		{
-			return new TorchParticleMEffect(0, 0);
-		}
-	};
-	private static final Pool<LightFlareMEffect> pool_LightFlareMEffect = new Pool<LightFlareMEffect>()
-	{
-		@Override
-		protected LightFlareMEffect newObject()
-		{
-			return new LightFlareMEffect(0, 0);
-		}
-	};
-	private static final Pool<TorchParticleSEffect> pool_TorchParticleSEffect = new Pool<TorchParticleSEffect>()
-	{
-		@Override
-		protected TorchParticleSEffect newObject()
-		{
-			return new TorchParticleSEffect(0, 0);
-		}
-	};
-	private static final Pool<LightFlareSEffect> pool_LightFlareSEffect = new Pool<LightFlareSEffect>()
-	{
-		@Override
-		protected LightFlareSEffect newObject()
-		{
-			return new LightFlareSEffect(0, 0);
-		}
-	};
-	private static final Pool<LogoFlameEffect> pool_LogoFlameEffect = new Pool<LogoFlameEffect>()
-	{
-		@Override
-		protected LogoFlameEffect newObject()
-		{
-			return new LogoFlameEffect();
-		}
-	};
-	private static final Pool<TitleDustEffect> pool_TitleDustEffect = new Pool<TitleDustEffect>()
-	{
-		@Override
-		protected TitleDustEffect newObject()
-		{
-			return new TitleDustEffect();
-		}
-	};
-	private static final Pool<DustEffect> pool_DustEffect = new Pool<DustEffect>()
-	{
-		@Override
-		protected DustEffect newObject()
-		{
-			return new DustEffect();
-		}
-	};
-	private static final Pool<BottomFogEffect> pool_BottomFogEffect = new Pool<BottomFogEffect>()
-	{
-		@Override
-		protected BottomFogEffect newObject()
-		{
-			return new BottomFogEffect(true);
-		}
-	};
-	private static final Pool<FireFlyEffect> pool_FireFlyEffect = new Pool<FireFlyEffect>()
-	{
-		@Override
-		protected FireFlyEffect newObject()
-		{
-			return new FireFlyEffect(Color.WHITE.cpy());
-		}
-	};
-	private static final Pool<FallingDustEffect> pool_FallingDustEffect = new Pool<FallingDustEffect>()
-	{
-		@Override
-		protected FallingDustEffect newObject()
-		{
-			return new FallingDustEffect(0, 0);
-		}
-	};
-	private static final Pool<CeilingDustCloudEffect> pool_CeilingDustCloudEffect = new Pool<CeilingDustCloudEffect>()
-	{
-		@Override
-		protected CeilingDustCloudEffect newObject()
-		{
-			return new CeilingDustCloudEffect(0, 0);
-		}
-	};
-	private static final Pool<ShinySparkleEffect> pool_ShinySparkleEffect = new Pool<ShinySparkleEffect>()
-	{
-		@Override
-		protected ShinySparkleEffect newObject()
-		{
-			return new ShinySparkleEffect();
-		}
-	};
-	private static final Pool<WobblyCircleEffect> pool_WobblyCircleEffect = new Pool<WobblyCircleEffect>()
-	{
-		@Override
-		protected WobblyCircleEffect newObject()
-		{
-			return new WobblyCircleEffect();
-		}
-	};
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	public static void free(AbstractGameEffect vfx)
@@ -299,6 +144,7 @@ public class FixMemoryChurn
 			CtClass ctChurn = pool.get(FixMemoryChurn.class.getName());
 			CtConstructor sinit = ctChurn.getClassInitializer();
 
+			int startLn = 42000;
 			for (Class<?> cls : handledVfx) {
 				CtClass ctClass = pool.get(cls.getName());
 
@@ -307,7 +153,7 @@ public class FixMemoryChurn
 
 				// Add pool_ to poolMap
 				sinit.insertAfter(
-						"poolMap.put(" + cls.getName() + ".class, pool_" + cls.getSimpleName() + ");"
+						"poolMap.put(" + cls.getName() + ".class, new " + UnsafePool.class.getName() + "(" + cls.getName() + ".class));"
 				);
 
 				// Create setupSuper()
@@ -315,6 +161,7 @@ public class FixMemoryChurn
 				ctClass.addMethod(method);
 
 				// Create setup(...) and alloc_(...)
+				int curLn = startLn;
 				for (CtConstructor ctor : ctClass.getDeclaredConstructors()) {
 					method = ctor.toMethod("setup", ctClass);
 					if (ctor.callsSuper()) {
@@ -329,14 +176,37 @@ public class FixMemoryChurn
 							ctor.getParameterTypes(), // param types
 							null,
 							"{" +
-									ctClass.getName() + " ret = (" + ctClass.getName() + ") pool_" + ctClass.getSimpleName() + ".obtain();" +
+									ctClass.getName() + " ret = (" + ctClass.getName() + ") ((" + Pool.class.getName() + ") poolMap.get(" + ctClass.getName() + ".class)).obtain();" +
 									"ret.setup($$);" +
 									"return ret;" +
 									"}",
 							ctChurn
 					);
+
+					// This isn't necessary, but it's kinda cool and makes the alloc_ methods "more correct"
+					ConstPool cp = method.getMethodInfo().getConstPool();
+					// Mark as synthetic
+					method.getMethodInfo().addAttribute(new SyntheticAttribute(cp));
+					CodeAttribute code = method.getMethodInfo().getCodeAttribute();
+					// Add line number info
+					code.getAttributes().add(makeLineNumberAttribute(method.getMethodInfo().getConstPool(), curLn, code.getCodeLength()));
+					// Local variable names
+					LocalVariableAttribute oldLocals = (LocalVariableAttribute) ctor.getMethodInfo().getCodeAttribute().getAttribute(LocalVariableAttribute.tag);
+					LocalVariableAttribute newLocals = new LocalVariableAttribute(cp);
+					// Copy parameter names
+					for (int i=0; i<oldLocals.tableLength(); ++i) {
+						if (oldLocals.startPc(i) == 0 && !"this".equals(oldLocals.variableName(i))) { // is a parameter, but remove "this"
+							newLocals.addEntry(0, code.getCodeLength(), cp.addUtf8Info(oldLocals.variableName(i)), cp.addUtf8Info(oldLocals.descriptor(i)), oldLocals.index(i)-1);
+						}
+					}
+					int maxLocals = code.getMaxLocals();
+					newLocals.addEntry(0, code.getCodeLength(), cp.addUtf8Info("ret"), cp.addUtf8Info(Descriptor.of(ctClass)), maxLocals-1);
+					code.getAttributes().add(newLocals);
+
 					ctChurn.addMethod(method);
+					curLn += 10;
 				}
+				startLn += 100;
 			}
 
 			// Replace appropriate new calls with alloc_
@@ -345,6 +215,26 @@ public class FixMemoryChurn
 				CtMethod method = ctClass.getDeclaredMethod(patch.getValue());
 				method.instrument(exprEditor);
 			}
+		}
+
+		private static AttributeInfo makeLineNumberAttribute(ConstPool cp, int startLn, int codeLength)
+		{
+			final int[] lines = new int[] {0, 20, codeLength-2};
+			byte[] data =new byte[(lines.length * 4) + 2];
+
+			int idx = 0;
+			ByteArray.write16bit(lines.length, data, 0);
+			idx += 2;
+
+			// for-each line
+			for (int i=0; i<lines.length; ++i) {
+				ByteArray.write16bit(lines[i], data, idx);
+				idx += 2;
+				ByteArray.write16bit(startLn + i, data, idx);
+				idx += 2;
+			}
+
+			return new AttributeInfo(cp, LineNumberAttribute.tag, data);
 		}
 
 		private static final ExprEditor exprEditor = new ExprEditor() {

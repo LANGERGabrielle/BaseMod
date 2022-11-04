@@ -950,4 +950,15 @@ This is a fast forward to v1.6.3 of daviscook477's fork with a few additional ch
 #### v5.46.1 ####
 * Fix crash when running multiple instances of the game (kiooeht)
 
+#### v5.47.0 ####
+* Allow evalcode command to access private fields and methods (kiooeht)
+* Add genericScreenOverlayReset helper to CustomScreen (kiooeht)
+* Fix Dear ImGui trying to load even when not enabled (kiooeht)
+* Refactor memory churn patch (kiooeht)
+* CardMods (Mistress Alison)
+  * Fix modifyBaseDamage rendering in combat and master deck
+  * Fix modifyBaseBlock rendering in combat and master deck
+  * Add modifyBaseMagic
+* Fix Chinese text rendering issues (Somdy)
+
 #### dev ####

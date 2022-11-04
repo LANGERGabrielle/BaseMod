@@ -1,5 +1,6 @@
 package basemod.abstracts;
 
+import basemod.ReflectionHacks;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 
@@ -53,4 +54,9 @@ public abstract class CustomScreen
 	public abstract void openingSettings();
 	public void openingDeck() {}
 	public void openingMap() {}
+
+	protected final void genericScreenOverlayReset()
+	{
+		ReflectionHacks.privateStaticMethod(AbstractDungeon.class, "genericScreenOverlayReset").invoke();
+	}
 }
