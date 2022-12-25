@@ -961,4 +961,9 @@ This is a fast forward to v1.6.3 of daviscook477's fork with a few additional ch
   * Add modifyBaseMagic
 * Fix Chinese text rendering issues (Somdy)
 
+#### v5.48.0 ####
+* Minor fix to Chinese text rendering (Somdy)
+* Fix card energy font in single card popup (herbix)
+* Allow multiple player classes for an event (Alchyr)
+
 #### dev ####
