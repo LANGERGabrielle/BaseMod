@@ -975,4 +975,7 @@ This is a fast forward to v1.6.3 of daviscook477's fork with a few additional ch
 * Allow dynamic variables to check card during upgrade coloring (Nyoxide)
 * Fix GlowInfo priority not being accessible (kiooeht)
 
+#### v5.50.0 ####
+* Add additionalTooltips method to CardMods (Pandemonium)
+
 #### dev ####
