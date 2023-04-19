@@ -39,20 +39,14 @@ public class RenderCustomDynamicVariableCN
 			DynamicVariable dv = BaseMod.cardDynamicVariableMap.get(key);
 			if (dv != null) {
 				if (dv.isModified(card)) {
-					if (dv.value(card) >= dv.baseValue(card)) {
+					if (dv.value(card) >= dv.modifiedBaseValue(card)) {
 						tmp[0] = "[#" + dv.getIncreasedValueColor().toString() + "]" + Integer.toString(dv.value(card)) + "[]";
 					} else {
 						tmp[0] = "[#" + dv.getDecreasedValueColor().toString() + "]" + Integer.toString(dv.value(card)) + "[]";
 					}
 				} else {
 					//cardmods affect base variables
-					int num = dv.baseValue(card);
-					if (dv instanceof BlockVariable && CardModifierPatches.CardModifierFields.cardModHasBaseBlock.get(card) && (!card.isBlockModified || card.upgradedBlock) ) {
-						num = CardModifierPatches.CardModifierFields.cardModBaseBlock.get(card);
-					} else if (dv instanceof DamageVariable && CardModifierPatches.CardModifierFields.cardModHasBaseDamage.get(card) && (!card.isDamageModified || card.upgradedDamage)) {
-						num = CardModifierPatches.CardModifierFields.cardModBaseDamage.get(card);
-					}
-					tmp[0] = Integer.toString(num);
+					tmp[0] = Integer.toString(dv.modifiedBaseValue(card));
 				}
 			}
 		}
