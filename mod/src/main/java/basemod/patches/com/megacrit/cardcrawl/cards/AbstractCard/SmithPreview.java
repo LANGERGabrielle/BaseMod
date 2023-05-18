@@ -34,6 +34,7 @@ public class SmithPreview
 				dv.setIsModified(card, true);
 			}
 		});
+		DynamicTextBlocks.DisplayingUpgradesField.displayingUpgrades.set(__instance, true);
 	}
 
 	public static void ForEachDynamicVariable(AbstractCard card, BiConsumer<AbstractCard, DynamicVariable> callback)
@@ -57,8 +58,10 @@ public class SmithPreview
 			}
 			for (String word : tokenized) {
 				java.util.regex.Matcher matcher = pattern.matcher(word);
-				if (matcher.find()) {
-					word = matcher.group(keyIndex);
+				if (matcher.find() || (Settings.lineBreakViaCharacter && word.equals("D"))) {
+					if (!word.equals("D")) {
+						word = matcher.group(keyIndex);
+					}
 
 					DynamicVariable dv = BaseMod.cardDynamicVariableMap.get(word);
 					if (dv != null) {

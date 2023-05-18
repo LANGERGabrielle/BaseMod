@@ -1021,4 +1021,8 @@ This is a fast forward to v1.6.3 of daviscook477's fork with a few additional ch
 #### v5.52.2 ####
 * Allow Ctrl, Shift, and Alt to be used on their own again for opening the console (kiooeht)
 
+#### v5.52.3 ####
+* Fix CardMod base value changes (Mistress Alison)
+* Fix border glow manager not testing for CardMod glows (NellyDevo)
+
 #### dev ####
