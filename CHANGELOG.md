@@ -1061,4 +1061,12 @@ This is a fast forward to v1.6.3 of daviscook477's fork with a few additional ch
   * Fix magic number not resetting if a CardMod was applied once (herbix)
     * Broke basegame cards like Halt
 
+#### v5.54.0 ####
+* Make basegame start relic upgrades replace the correct relic (erasels/kiooeht)
+* Make framebuffers nested (kiooeht)
+* Fix whatmod tooltip in the wrong position on SCV and SRV (kiooeht)
+
+#### v5.54.1 ####
+* Fix crash when inspecting single cards or relics in SCV/SRC (kiooeht)
+
 #### dev ####

@@ -51,7 +51,6 @@ public class ApplyScreenPostProcessor {
             }
         }
 
-        setDefaultFrameBuffer(primaryFrameBuffer);
         primaryFrameBuffer.begin();
         ___sb.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         Gdx.gl.glClearColor(0, 0, 0, 0);
@@ -79,7 +78,6 @@ public class ApplyScreenPostProcessor {
         for (ScreenPostProcessor postProcessor : postProcessors) {
             swapBuffers();
 
-            setDefaultFrameBuffer(primaryFrameBuffer);
             primaryFrameBuffer.begin();
             Gdx.gl.glClearColor(0, 0, 0, 0);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_STENCIL_BUFFER_BIT);
@@ -93,7 +91,6 @@ public class ApplyScreenPostProcessor {
         }
 
         sb.setShader(null);
-        Gdx.gl20.glBindFramebuffer(GL20.GL_FRAMEBUFFER, defaultFramebufferHandle);
 
         // Fix screen shake
         if (Settings.SCREEN_SHAKE &&
@@ -158,10 +155,6 @@ public class ApplyScreenPostProcessor {
 
             e.printStackTrace();
         }
-    }
-
-    private static void setDefaultFrameBuffer(FrameBuffer fbo) {
-        ReflectionHacks.setPrivateStatic(GLFrameBuffer.class, "defaultFramebufferHandle", fbo.getFramebufferHandle());
     }
 
     @SpirePatch2(
